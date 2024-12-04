@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iPhone Store</title>
+    <style>
+        /* Add the previous styles here */
+        .form-container {
+            padding: 2rem;
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .form-container input, .form-container select {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 1rem 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-container button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 0.8rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to iPhone Store</h1>
+        <p>Fill out your details to complete the purchase!</p>
+    </header>
+
+    <div class="form-container">
+        <form id="orderForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="surname">Surname:</label>
+            <input type="text" id="surname" name="surname" required>
+
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address" required>
+
+            <label for="phone">Phone Number:</label>
+            <input type="text" id="phone" name="phone" required>
+
+            <label for="iphone">Select iPhone:</label>
+            <select id="iphone" name="iphone" required>
+                <option value="iPhone 11">iPhone 11 - R3000</option>
+                <option value="iPhone 11 Pro">iPhone 11 Pro - R3500</option>
+                <option value="iPhone 12">iPhone 12 - R5000</option>
+                <option value="iPhone 13 Mini">iPhone 13 Mini - R6000</option>
+                <option value="iPhone 6s">iPhone 6s - R1200</option>
+                <option value="iPhone 8 Plus">iPhone 8 Plus - R1600</option>
+            </select>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('orderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+
+            const data = Object.fromEntries(formData.entries());
+            console.log('Form submitted:', data);
+
+            // Send form data to the backend
+            const response = await fetch('http://localhost:3000/submit-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert(`Order placed successfully! Payment details: ${result.paymentDetails}`);
+            } else {
+                alert('Error placing order. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>
